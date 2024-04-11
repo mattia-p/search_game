@@ -5,3 +5,4 @@ project(demo VERSION 0.1.0)
 
 add_executable(game src/main.cpp src/Game.cpp src/TextureManager.cpp src/GameObject.cpp src/Map.cpp src/astar.cpp src/Node.cpp)
 target_link_libraries(game SDL2main SDL2 SDL2_image)
+target_include_directories(game PRIVATE include/)

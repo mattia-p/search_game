@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/game.dir/src/main.cpp.o CMakeFiles/game.dir/src/Game.cpp.o CMakeFiles/game.dir/src/TextureManager.cpp.o CMakeFiles/game.dir/src/GameObject.cpp.o CMakeFiles/game.dir/src/Map.cpp.o CMakeFiles/game.dir/src/astar.cpp.o CMakeFiles/game.dir/src/Node.cpp.o -o game  -lSDL2main -lSDL2 -lSDL2_image 

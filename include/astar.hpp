@@ -8,7 +8,7 @@ class Astar {
 
 public:
 
-    Astar(int x);
+    Astar();
     ~Astar();
 
     std::vector<std::vector<int>> search(int map[20][25], int start[2], int end[2]);

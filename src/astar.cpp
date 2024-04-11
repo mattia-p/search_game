@@ -1,9 +1,7 @@
 #include "astar.hpp"
 
-Astar::Astar(int x)
-{
-    std::cout << x << std::endl;
-}
+Astar::Astar()
+{}
 
 Astar::~Astar(){}
 
@@ -21,7 +19,7 @@ void Astar::sortSet(std::vector<Node*> &set)
 
 void Astar::ExpandNeighbors(Node* &current_node, int map[20][25], std::vector<Node*> &open_set, int end[2])
 {
-    // directional deltas
+    // directions
     const int delta[4][2]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
     // Loop through current node's potential neighbors
@@ -29,8 +27,6 @@ void Astar::ExpandNeighbors(Node* &current_node, int map[20][25], std::vector<No
     {
         int x2 = current_node->x + delta[i][0];
         int y2 = current_node->y + delta[i][1];
-
-        std::cout << "Potential neighbor - x: " << x2 << ", y: " << y2 << std::endl; 
 
         // Check that the potential neighbor is valid (in map and not in obstacle)
         if (CheckValidNode(x2, y2, map))
@@ -90,21 +86,13 @@ bool Astar::CheckValidNode(int x, int y, int map[20][25])
     }
     else
     {
-        std::cout << "Not valid" << std::endl;
-        std::cout << "Map value: " << map[y][x] << std::endl;
         return false;
     }
 }
 
 std::vector<std::vector<int>> Astar::SearchBack(Node* &current_node)
 {
-    // std::vector<std::vector<int>> output_path;
     std::vector<std::vector<int>> output_path = {};
-
-
-    std::cout << "x: " << current_node->x << ", y: " << current_node->y << std::endl;
-    std::cout << "Parent node: " << std::endl;
-    std::cout << "x: " << current_node->parent->x << ", y: " << current_node->parent->y << std::endl;
     
     while (current_node->parent != nullptr)
     {
@@ -119,10 +107,7 @@ std::vector<std::vector<int>> Astar::SearchBack(Node* &current_node)
 std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int end[2])
 {
 
-    // Test
     std::vector<std::vector<int>> output;
-    output = {{0,0}, {1, 2}, {4, 4}, {10, 10}, {15, 15}};
-    // End test
 
     std::vector<Node*> open_set;
     float h = Node::heurestic(start[0], start[1], end[0], end[1]);
@@ -130,8 +115,6 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
     Node start_node(start[0], start[1], 0, h);
     start_node.parent = nullptr;
     open_set.push_back(&start_node);
-
-    std::cout << "Start node: " << &start_node << ", x: " << start_node.x << ", y: " << start_node.y << std::endl;
 
     
     while(open_set.size() > 0)
@@ -144,18 +127,11 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
         auto current_node = open_set.back();
         open_set.pop_back();
 
-        std::cout << "---------------------------------" << std::endl;
-        std::cout << "Current node: " << current_node << ", x: " << current_node->x << ", y: " << current_node->y << std::endl;
-        
         // Check if it's the end node
         if (current_node->x == end[0] && current_node->y == end[1])
         {
             // Reverse back the Node to get back to origin
-            std::cout << "Path found" << std::endl;
-            std::cout << "Goal x: " << end[0] << ", Goal y: " << end[1] << std::endl;
             output = SearchBack(current_node);
-
-            std::cout << "Path: " << std::endl;
 
             for(auto v : output)
             {
@@ -171,8 +147,6 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
         }
 
     }
-
-
 
     return output;
 }
