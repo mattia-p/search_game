@@ -3,9 +3,32 @@
 #include "GameObject.hpp"
 #include "Map.hpp"
 
-GameObject* player;
-GameObject* player2;
-Map* map;
+// int lvl1[20][25] = {
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1},
+//     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+// };
+
+// GameObject* start;
+// GameObject* player;
+// Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
 
@@ -44,9 +67,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         isRunning = false;
     }
 
-    player = new GameObject("../src/assets/player.png", 0, 0);
-    player2 = new GameObject("../src/assets/grass.png", 50, 50);
-    map = new Map();
+    // player = new GameObject("../src/assets/dirt.png", 0, 0);
+    // start = new GameObject("../src/assets/dirt.png", 20, 30);
+    // player2 = new GameObject("../src/assets/grass.png", 50, 50);
+    // map = new Map(lvl1);
+    // map = new Map(lvl1);
 
     // playerTex = TextureManager::LoadTexture("../src/assets/player.png", renderer);
     // SDL_Surface* tmpSurface = IMG_Load("../src/assets/player.png");
@@ -56,6 +81,32 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     // }
     // playerTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     // SDL_FreeSurface(tmpSurface);
+}
+
+void Game::loadMap(int arr[20][25])
+{
+    map = new Map(arr);
+}
+
+void Game::setStart(int x, int y)
+{
+    start = new GameObject("../src/assets/start.png", x*32, y*32);
+}
+
+void Game::setEnd(int x, int y)
+{
+    end = new GameObject("../src/assets/end.png", x*32, y*32);
+}
+
+void Game::setPath(std::vector<std::vector<int>> path_coordinates)
+{
+    for(auto point : path_coordinates)
+    {
+        // std::cout << point[0] << std::endl;
+        GameObject* game_obj;
+        game_obj = new GameObject("../src/assets/path.png", point[0] * 32, point[1] * 32);
+        path.push_back(game_obj);
+    }
 }
 
 void Game::handleEvents()
@@ -75,8 +126,16 @@ void Game::handleEvents()
 
 void Game::update()
 {
-    player->Update();
-    player2->Update();
+    // player->Update();
+    start->Update();
+    end->Update();
+
+    // player2->Update();
+
+    for (auto gameobj : path)
+    {
+        gameobj->Update();
+    }
 }
 
 void Game::render()
@@ -87,8 +146,25 @@ void Game::render()
     // Add stuff to render here
     // SDL_RenderCopy(renderer, playerTex, NULL, &destR);
     map->DrawMap();
-    player->Render();
-    player2->Render();
+    // draw start 
+    // draw end
+    // draw path
+    // player->Render(renderer);
+
+
+    start->Render(renderer);
+    
+
+    for (auto gameobj : path)
+    {
+        gameobj->Render(renderer);
+    }
+
+    end->Render(renderer);
+
+
+
+    // player2->Render();
 
     SDL_RenderPresent(renderer);
 

@@ -1,5 +1,7 @@
 #pragma once
-#include "Game.hpp"
+// #include "Game.hpp"
+#include "SDL2/SDL.h"
+#include <SDL2/SDL_image.h>
 
 class GameObject {
 
@@ -8,7 +10,7 @@ public:
     ~GameObject();
 
     void Update();
-    void Render();
+    void Render(SDL_Renderer* ren);
 
 private:
     int xpos;

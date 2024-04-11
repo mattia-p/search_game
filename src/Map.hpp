@@ -1,12 +1,14 @@
 #pragma once
-#include "Game.hpp"
+// #include "Game.hpp"
+#include "SDL2/SDL.h"
+#include <SDL2/SDL_image.h>
 
 class Map
 {
 
 public:
 
-    Map();
+    Map(int map_array[20][25]);
     ~Map();
 
     void LoadMap(int arr[20][25]);

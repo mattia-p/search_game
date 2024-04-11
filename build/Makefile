@@ -201,6 +201,30 @@ src/Map.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/Map.cpp.s
 .PHONY : src/Map.cpp.s
 
+src/Node.o: src/Node.cpp.o
+.PHONY : src/Node.o
+
+# target to build an object file
+src/Node.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/Node.cpp.o
+.PHONY : src/Node.cpp.o
+
+src/Node.i: src/Node.cpp.i
+.PHONY : src/Node.i
+
+# target to preprocess a source file
+src/Node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/Node.cpp.i
+.PHONY : src/Node.cpp.i
+
+src/Node.s: src/Node.cpp.s
+.PHONY : src/Node.s
+
+# target to generate assembly for a file
+src/Node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/Node.cpp.s
+.PHONY : src/Node.cpp.s
+
 src/TextureManager.o: src/TextureManager.cpp.o
 .PHONY : src/TextureManager.o
 
@@ -224,6 +248,30 @@ src/TextureManager.s: src/TextureManager.cpp.s
 src/TextureManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/TextureManager.cpp.s
 .PHONY : src/TextureManager.cpp.s
+
+src/astar.o: src/astar.cpp.o
+.PHONY : src/astar.o
+
+# target to build an object file
+src/astar.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/astar.cpp.o
+.PHONY : src/astar.cpp.o
+
+src/astar.i: src/astar.cpp.i
+.PHONY : src/astar.i
+
+# target to preprocess a source file
+src/astar.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/astar.cpp.i
+.PHONY : src/astar.cpp.i
+
+src/astar.s: src/astar.cpp.s
+.PHONY : src/astar.s
+
+# target to generate assembly for a file
+src/astar.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/game.dir/build.make CMakeFiles/game.dir/src/astar.cpp.s
+.PHONY : src/astar.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -267,9 +315,15 @@ help:
 	@echo "... src/Map.o"
 	@echo "... src/Map.i"
 	@echo "... src/Map.s"
+	@echo "... src/Node.o"
+	@echo "... src/Node.i"
+	@echo "... src/Node.s"
 	@echo "... src/TextureManager.o"
 	@echo "... src/TextureManager.i"
 	@echo "... src/TextureManager.s"
+	@echo "... src/astar.o"
+	@echo "... src/astar.i"
+	@echo "... src/astar.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
