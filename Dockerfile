@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     sudo \
     libsdl2-dev \
-    libsdl2-image-dev
+    libsdl2-image-dev \
+    libgtest-dev
 
 # Set working directory
 WORKDIR /app

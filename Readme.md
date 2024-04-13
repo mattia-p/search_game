@@ -14,3 +14,5 @@ xhost +
 - Make this run online?
 - Solve xhost + problem
 - Change repo name
+- Add some automated formatting
+- CI? Automated build check and tests check?
