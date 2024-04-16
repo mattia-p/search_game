@@ -14,8 +14,8 @@ int lvl1[20][25] = {
     {1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1},
+    {1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -43,36 +43,13 @@ int main(int argc, const char * argv[])
 
     game->loadMap(lvl1);
 
-    game->setStart(1, 10);
-    game->setEnd(2, 2);
-    
-    std::vector<std::vector<int>> path;
-    
-    // find path
-    int start_pose[2] = {1, 10};
-    int end_pose[2] = {2, 2};
-    Astar* astar;
-    astar = new Astar();
-
-    std::cout << "Start: " << start_pose[1] << ", " << start_pose[1] << std::endl;
-    std::cout << "Goal: " << end_pose[1] << ", " << end_pose[1] << std::endl;
-
-    path = astar->search(lvl1, start_pose, end_pose);
-
-    std::cout << "Path found: " << std::endl;
-    for (auto point : path)
-    {
-        std::cout << point[0] << ", " << point[1] << std::endl;
-    }
-
-    game->setPath(path);
-
     while(game->running())
     {
 
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
+
         game->update();
         game->render();
 

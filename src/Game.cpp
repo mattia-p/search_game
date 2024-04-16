@@ -45,6 +45,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::loadMap(int arr[20][25])
 {
     map = new Map(arr);
+
+    // TODO: Make this better, or use std::copy
+    for (int i = 0; i < 20; ++i) {
+        for (int j = 0; j < 25; ++j) {
+            map_array[i][j] = arr[i][j];
+        }
+    }
 }
 
 void Game::setStart(int x, int y)
@@ -69,6 +76,7 @@ void Game::setPath(std::vector<std::vector<int>> path_coordinates)
 
 void Game::handleEvents()
 {
+    // std::cout << "Handle events" << std::endl;
     SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type)
@@ -76,20 +84,81 @@ void Game::handleEvents()
     case SDL_QUIT:
         isRunning = false;
         break;
-    
-    default:
-        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            if (start_pose_acquired == false)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+                start_pose_acquired = true;
+
+                setStart(mouseX / 32, mouseY / 32);
+                // start_pose = {mouseX / 32, mouseY / 32};
+                start_pose[0] = mouseX / 32;
+                start_pose[1] = mouseY / 32;
+            }
+            else if (start_pose_acquired == true && end_pose_acquired == false)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+                
+                end_pose_acquired = true;
+
+                setEnd(mouseX / 32, mouseY / 32);
+
+                end_pose[0] = mouseX / 32;
+                end_pose[1] = mouseY / 32;
+
+            }
+            
+        }
+    }
+
+
+    if (start_pose_acquired && end_pose_acquired && !a_star_done)
+    {
+        std::cout << "Search for solution" << std::endl;
+        
+        std::vector<std::vector<int>> path;
+
+        Astar* astar;
+        astar = new Astar();
+
+        path = astar->search(map_array, start_pose, end_pose);
+
+        // std::cout << "Path found: " << std::endl;
+        // for (auto point : path)
+        // {
+        //     std::cout << point[0] << ", " << point[1] << std::endl;
+        // }
+
+        setPath(path);
+
+        a_star_done = true;
+        
     }
 }
 
 void Game::update()
 {
-    start->Update();
-    end->Update();
-
-    for (auto gameobj : path)
+    //  TODO: Completely change this
+    if (start_pose_acquired)
     {
-        gameobj->Update();
+        start->Update();
+    }
+    
+    if (a_star_done)
+    {
+        for (auto gameobj : path)
+        {
+            gameobj->Update();
+        }
+    }
+
+    if (end_pose_acquired)
+    {
+        end->Update();
     }
 }
 
@@ -101,14 +170,23 @@ void Game::render()
     // Add stuff to render here
     map->DrawMap();
 
-    start->Render(renderer);
-    
-    for (auto gameobj : path)
+    if (start_pose_acquired)
     {
-        gameobj->Render(renderer);
+        start->Render(renderer);
     }
 
-    end->Render(renderer);
+    if (a_star_done)
+    {
+        for (auto gameobj : path)
+        {
+            gameobj->Render(renderer);
+        }
+    }
+    
+    if (end_pose_acquired)
+    {
+        end->Render(renderer);
+    }
 
     SDL_RenderPresent(renderer);
 

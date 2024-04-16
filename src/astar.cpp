@@ -133,10 +133,10 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
             // Reverse back the Node to get back to origin
             output = SearchBack(current_node);
 
-            for(auto v : output)
-            {
-                std::cout << v[0] << ", " << v[1] << std::endl;
-            }
+            // for(auto v : output)
+            // {
+            //     std::cout << v[0] << ", " << v[1] << std::endl;
+            // }
 
             return output;
         }

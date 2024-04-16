@@ -8,6 +8,8 @@
 #include "Map.hpp"
 #include "GameObject.hpp"
 #include <vector>
+#include "astar.hpp"
+
 
 class Game {
 
@@ -32,6 +34,7 @@ public:
     static SDL_Renderer *renderer;
 
     Map* map;
+    int map_array[20][25];
     GameObject* start;
     GameObject* end;
     std::vector<GameObject*> path;
@@ -39,6 +42,11 @@ public:
 private:
     int cnt = 0;
     bool isRunning;
+    int start_pose[2];
+    int end_pose[2];
+    bool start_pose_acquired = false;
+    bool end_pose_acquired = false;
+    bool a_star_done = false;
     SDL_Window *window;
     
 };

@@ -16,3 +16,9 @@ xhost +
 - Change repo name
 - Add some automated formatting
 - CI? Automated build check and tests check?
+- Make user put the obstacles
+- Print some text
+- Reset button
+- Account for solution not found
+- Make game bigger with more tiles
+- Make it modular and let people choose size
