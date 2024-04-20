@@ -76,7 +76,6 @@ void Game::setPath(std::vector<std::vector<int>> path_coordinates)
 
 void Game::handleEvents()
 {
-    // std::cout << "Handle events" << std::endl;
     SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type)
@@ -118,7 +117,6 @@ void Game::handleEvents()
 
     if (start_pose_acquired && end_pose_acquired && !a_star_done)
     {
-        std::cout << "Search for solution" << std::endl;
         
         std::vector<std::vector<int>> path;
 
@@ -126,12 +124,6 @@ void Game::handleEvents()
         astar = new Astar();
 
         path = astar->search(map_array, start_pose, end_pose);
-
-        // std::cout << "Path found: " << std::endl;
-        // for (auto point : path)
-        // {
-        //     std::cout << point[0] << ", " << point[1] << std::endl;
-        // }
 
         setPath(path);
 
