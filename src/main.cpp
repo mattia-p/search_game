@@ -40,7 +40,7 @@ int main(int argc, const char * argv[])
     game = new Game;
 
     game->init("GameEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
-
+    game->is_step_search = true;
     game->loadMap(lvl1);
 
     while(game->running())

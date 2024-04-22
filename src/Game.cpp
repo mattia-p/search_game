@@ -6,7 +6,9 @@
 SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game()
-{}
+{
+    Astar* astar = nullptr;
+}
 
 Game::~Game()
 {}
@@ -114,21 +116,84 @@ void Game::handleEvents()
         }
     }
 
-
-    if (start_pose_acquired && end_pose_acquired && !a_star_done)
+    // Normal path search
+    if (!is_step_search)
     {
-        
-        std::vector<std::vector<int>> path;
 
-        Astar* astar;
-        astar = new Astar();
+        if (start_pose_acquired && end_pose_acquired && !a_star_done)
+        {
+            
+            std::vector<std::vector<int>> path;
 
-        path = astar->search(map_array, start_pose, end_pose);
+            // Astar* astar;
+            astar = new Astar();
 
-        setPath(path);
+            path = astar->search(map_array, start_pose, end_pose);
 
-        a_star_done = true;
-        
+            setPath(path);
+
+            a_star_done = true;
+
+        }
+
+    }
+
+    // Step by step search
+    else
+    {
+        // If the user set the start and end position and the path search isn't over yet
+        if (start_pose_acquired && end_pose_acquired && !a_star_done)
+        {
+
+            if (step_search_initialized == false)
+            {
+                std::cout << "Initialize astar object" << std::endl;
+                astar = new Astar();
+                
+                step_search_initialized = true;
+            }
+            else
+            {
+                //  Do one step of the path search
+                astar->StepSearch(map_array, start_pose, end_pose);
+
+                // Update the open set and closed set objects
+                setOpenSet(astar->open_set_step_search);
+                setClosedSet(astar->closed_set_step_search);
+            }
+
+            // Check if the path search is over
+            a_star_done = astar->search_complete;
+
+            // If the path search if over, update the path object to plot the result
+            if (a_star_done)
+            {
+                std::cout << "Goal found: " << std::endl;
+                setPath(astar->current_path);
+            }
+        }
+    }
+}
+
+void Game::setOpenSet(const std::vector<Node*> &open_set_nodes)
+{
+    open_set_step_search = {};
+    for(const auto &node : open_set_nodes)
+    {
+        GameObject* game_obj;
+        game_obj = new GameObject("../src/assets/open.png", node->x * 32, node->y * 32);
+        open_set_step_search.push_back(game_obj);
+    }
+}
+
+void Game::setClosedSet(const std::vector<Node*>  &closed_set_nodes)
+{
+    closed_set_step_search = {};
+    for(const auto &node : closed_set_nodes)
+    {
+        GameObject* game_obj;
+        game_obj = new GameObject("../src/assets/closed.png", node->x * 32, node->y * 32);
+        closed_set_step_search.push_back(game_obj);
     }
 }
 
@@ -140,6 +205,19 @@ void Game::update()
         start->Update();
     }
     
+    if (is_step_search)
+    {
+        for (auto gameobj : closed_set_step_search)
+        {
+            gameobj->Update();
+        }
+
+        for (auto gameobj : open_set_step_search)
+        {
+            gameobj->Update();
+        }
+    }
+
     if (a_star_done)
     {
         for (auto gameobj : path)
@@ -161,6 +239,20 @@ void Game::render()
 
     // Add stuff to render here
     map->DrawMap();
+    
+    if (is_step_search)
+    {
+        for(auto gameobj : closed_set_step_search)
+        {
+            gameobj->Render(renderer);
+        }
+
+        for(auto gameobj : open_set_step_search)
+        {
+            gameobj->Render(renderer);
+        }
+    }
+
 
     if (start_pose_acquired)
     {
@@ -174,6 +266,7 @@ void Game::render()
             gameobj->Render(renderer);
         }
     }
+
     
     if (end_pose_acquired)
     {

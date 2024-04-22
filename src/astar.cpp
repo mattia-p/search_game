@@ -1,7 +1,6 @@
 #include "astar.hpp"
 
-Astar::Astar()
-{}
+Astar::Astar(){}
 
 Astar::~Astar(){}
 
@@ -175,4 +174,66 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
     std::cout << "Not path found" << std::endl;
 
     return output;
+}
+
+void Astar::StepSearch(int map[20][25], int start[2], int end[2])
+{
+
+    // If path is already found, don't do anything
+    if (search_complete == false)
+    {
+
+        // Step search initialization
+        if (stepSearchInitialized == false)
+            {
+                std::cout << "Initialize step search" << std::endl;
+
+                // Initialize closed set and open set
+                closed_set_step_search = {};
+                open_set_step_search = {};
+
+                // Create first node
+                float h_first_node = Node::heurestic(start[0], start[1], end[0], end[1]);
+
+                // Allocate start node dynamically
+                Node* start_node = new Node(start[0], start[1], 0, h_first_node);
+                start_node->parent = nullptr;
+
+                // Add first node to open set
+                open_set_step_search.push_back(start_node);
+
+                stepSearchInitialized = true;
+            }
+            else
+            {
+
+                // Sort the nodes in the open set
+                sortSet(open_set_step_search); 
+
+                // Get current node (last one in the open set)
+                auto current_node = open_set_step_search.back();
+
+                // Remove the current node from the open set
+                open_set_step_search.pop_back();
+
+                // Put current node in the closed set
+                closed_set_step_search.push_back(current_node);
+
+                // Check if the current node is the end node
+                if (current_node->x == end[0] && current_node->y == end[1])
+                {
+                    // Reverse back the Node to get back to origin to create the full path
+                    current_path = SearchBack(current_node);
+
+                    std::cout << "Goal node found" << std::endl;
+
+                    search_complete = true;
+                }
+                else
+                {
+                    // Get neighbors of current node and put them in open set
+                    ExpandNeighbors(current_node, map, open_set_step_search, closed_set_step_search, end);
+                }
+            }
+    }
 }

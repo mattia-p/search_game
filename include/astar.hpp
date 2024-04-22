@@ -20,5 +20,17 @@ public:
     static std::vector<std::vector<int>> SearchBack(Node* &current_node);
     static Node* GetNodeFromOpenSet(int x, int y, std::vector<Node*> &open_set);
     static bool NodeInClosedSet(int x, int y, std::vector<Node*> &closed_set);
+    
+    // For step search
+    bool stepSearchInitialized = false;
+    void StepSearch(int map[20][25], int start[2], int end[2]);
+    std::vector<Node*> closed_set_step_search;
+    std::vector<Node*> open_set_step_search;
+    std::vector<int*> test_set;
+    bool search_complete;
+    int test;
+    std::vector<std::vector<int>> current_path;
+
+    void showPrint();
 
 };

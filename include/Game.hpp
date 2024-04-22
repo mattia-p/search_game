@@ -9,6 +9,7 @@
 #include "GameObject.hpp"
 #include <vector>
 #include "astar.hpp"
+#include "Node.hpp"
 
 
 class Game {
@@ -38,6 +39,15 @@ public:
     GameObject* start;
     GameObject* end;
     std::vector<GameObject*> path;
+
+    // Step search
+    Astar* astar;
+    bool is_step_search = false;
+    bool step_search_initialized = false;
+    std::vector<GameObject*> open_set_step_search;
+    std::vector<GameObject*> closed_set_step_search;
+    void setOpenSet(const std::vector<Node*>  &open_set_nodes);
+    void setClosedSet(const std::vector<Node*> &closed_set_nodes);
 
 private:
     int cnt = 0;
