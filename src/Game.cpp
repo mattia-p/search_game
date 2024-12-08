@@ -3,17 +3,18 @@
 #include "GameObject.hpp"
 #include "Map.hpp"
 
+#include <memory> // for smart pointer
+#include <cstring>  // For std::memcpy
+
 SDL_Renderer* Game::renderer = nullptr;
 
-Game::Game()
-{
-    Astar* astar = nullptr;
+Game::Game(){
 }
 
 Game::~Game()
 {}
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, bool is_step_search_in)
 {
     int flags = 0;
     if(fullscreen)
@@ -42,37 +43,38 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         isRunning = false;
     }
 
+    is_step_search = is_step_search_in;
+
 }
 
 void Game::loadMap(int arr[20][25])
 {
-    map = new Map(arr);
+    // Create Map object (just for visualization)
+    map = std::make_unique<Map>(arr);
 
-    // TODO: Make this better, or use std::copy
-    for (int i = 0; i < 20; ++i) {
-        for (int j = 0; j < 25; ++j) {
-            map_array[i][j] = arr[i][j];
-        }
-    }
+    // Directly assign the contents of arr to map_array
+    std::memcpy(map_array, arr, sizeof(map_array));
+
 }
 
 void Game::setStart(int x, int y)
 {
-    start = new GameObject("../src/assets/start.png", x*32, y*32);
+    // Create GameObject and push it to GameObjects vector
+    GameObjects.push_back(std::make_unique<GameObject>("../src/assets/start.png", x*32, y*32));
 }
 
 void Game::setEnd(int x, int y)
-{
-    end = new GameObject("../src/assets/end.png", x*32, y*32);
+{   
+    // Create GameObject and push it to GameObjects vector
+    GameObjects.push_back(std::make_unique<GameObject>("../src/assets/end.png", x*32, y*32));
 }
 
 void Game::setPath(std::vector<std::vector<int>> path_coordinates)
 {
     for(auto point : path_coordinates)
     {
-        GameObject* game_obj;
-        game_obj = new GameObject("../src/assets/path.png", point[0] * 32, point[1] * 32);
-        path.push_back(game_obj);
+        // Create GameObject and push it to GameObjects vector
+        GameObjects.push_back(std::make_unique<GameObject>("../src/assets/path.png", point[0] * 32, point[1] * 32));
     }
 }
 
@@ -132,13 +134,14 @@ void Game::handleSearch()
 
             std::vector<std::vector<int>> path;
 
-            Astar* astar = nullptr;
+            // Create local instance of astar class
+            Astar astar;
 
-            // Astar* astar;
-            astar = new Astar();
+            path = astar.search(map_array, start_pose, end_pose);
 
-            path = astar->search(map_array, start_pose, end_pose);
+            std::cout << "End astar search" << std::endl;
 
+            // TODO: Make sure is returns something before we call setPath
             setPath(path);
 
             a_star_done = true;
@@ -148,35 +151,36 @@ void Game::handleSearch()
     else{
 
         // Step by step search
-        if (start_pose_acquired && end_pose_acquired && !a_star_done){
+        // if (start_pose_acquired && end_pose_acquired && !a_star_done){
 
-            if (step_search_initialized == false){
-                std::cout << "Initialize astar object" << std::endl;
+        //     if (step_search_initialized == false){
+        //         std::cout << "Initialize astar object" << std::endl;
                 
-                astar = new Astar();
+        //         astar = new Astar();
                 
-                step_search_initialized = true;
-            }
-            else{
-                //  Do one step of the path search
-                astar->StepSearch(map_array, start_pose, end_pose);
+        //         step_search_initialized = true;
+        //     }
+        //     else{
+        //         //  Do one step of the path search
+        //         astar->StepSearch(map_array, start_pose, end_pose);
 
-                // Update the open set and closed set objects
-                setOpenSet(astar->open_set_step_search);
-                setClosedSet(astar->closed_set_step_search);
-            }
+        //         // Update the open set and closed set objects
+        //         setOpenSet(astar->open_set_step_search);
+        //         setClosedSet(astar->closed_set_step_search);
+        //     }
 
-            // Check if the path search is over
-            bool a_star_done = astar->search_complete;
+        //     // Check if the path search is over
+        //     // TODO: ERROR? This creates a local variable a_star_done rather than modifying the class member. 
+        //     bool a_star_done = astar->search_complete;
 
-            // If the path search if over, update the path object to plot the result
-            if (a_star_done)
-            {
-                // std::cout << "Goal found: " << std::endl;
-                setPath(astar->current_path);
-            }
+        //     // If the path search if over, update the path object to plot the result
+        //     if (a_star_done)
+        //     {
+        //         // std::cout << "Goal found: " << std::endl;
+        //         setPath(astar->current_path);
+        //     }
 
-        }
+        // }
 
     }
 }
@@ -205,12 +209,7 @@ void Game::setClosedSet(const std::vector<Node*>  &closed_set_nodes)
 
 void Game::update()
 {
-    //  TODO: Completely change this
-    if (start_pose_acquired)
-    {
-        start->Update();
-    }
-    
+
     if (is_step_search)
     {
         for (auto gameobj : closed_set_step_search)
@@ -224,18 +223,13 @@ void Game::update()
         }
     }
 
-    if (a_star_done)
+  
+    // Update the start, end and path objects
+    for (const auto& gameobj : GameObjects)
     {
-        for (auto gameobj : path)
-        {
-            gameobj->Update();
-        }
+        gameobj->Update();
     }
 
-    if (end_pose_acquired)
-    {
-        end->Update();
-    }
 }
 
 void Game::render()
@@ -259,26 +253,12 @@ void Game::render()
         }
     }
 
-
-    if (start_pose_acquired)
-    {
-        start->Render(renderer);
-    }
-
-    if (a_star_done)
-    {
-        for (auto gameobj : path)
-        {
-            gameobj->Render(renderer);
-        }
+    // Render the start, end and path objects
+    for(const auto& gameobj: GameObjects){
+        gameobj->Render(renderer);
     }
 
     
-    if (end_pose_acquired)
-    {
-        end->Render(renderer);
-    }
-
     SDL_RenderPresent(renderer);
 
 }

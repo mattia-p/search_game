@@ -162,6 +162,9 @@ std::vector<std::vector<int>> Astar::search(int map[20][25], int start[2], int e
             // Reverse back the Node to get back to origin
             output = SearchBack(current_node);
 
+            // Remove the last one
+            output.erase(output.begin());
+
             return output;
         }
         else

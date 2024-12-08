@@ -11,6 +11,8 @@
 #include "astar.hpp"
 #include "Node.hpp"
 
+#include <memory> // For smart pointers 
+
 
 class Game {
 
@@ -18,7 +20,7 @@ public:
     Game();
     ~Game();
 
-    void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+    void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, bool is_step_search);
     
     void handleEvents();
     void handleSearch();
@@ -27,23 +29,12 @@ public:
     void clean();
 
     void loadMap(int arr[20][25]);
-    void setStart(int x, int y);
-    void setEnd(int x, int y);
-    void setPath(std::vector<std::vector<int>> path_coordinates);
-
+    
     bool running() {return isRunning;}
-    bool isRunning;
-
+    
     static SDL_Renderer *renderer;
 
-    Map* map;
-    int map_array[20][25];
-    GameObject* start;
-    GameObject* end;
-    std::vector<GameObject*> path;
-
     // Step search
-    Astar* astar;
     bool is_step_search = false;
     bool step_search_initialized = false;
     std::vector<GameObject*> open_set_step_search;
@@ -60,6 +51,17 @@ public:
 private:
     int cnt = 0;
     SDL_Window *window;
+
+    bool isRunning;
+
+    void setStart(int x, int y);
+    void setEnd(int x, int y);
+    void setPath(std::vector<std::vector<int>> path_coordinates);
+
+    std::unique_ptr<Map> map;
+    int map_array[20][25];
+
+    std::vector<std::unique_ptr<GameObject>> GameObjects;
     
 };
 

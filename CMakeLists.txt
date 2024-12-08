@@ -28,7 +28,7 @@ cmake_minimum_required(VERSION 3.22.1)
 project(demo VERSION 0.1.0)
 
 # Tells CMake that the project is using C++
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 # Ensures that the specified C++ standard (CMAKE_CXX_STANDARD) is required.
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
