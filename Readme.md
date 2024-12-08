@@ -19,3 +19,5 @@ xhost +
 - Account for solution not found
 - Make game bigger with more tiles
 - Make it modular and let people choose size
+- Automated documentation
+- Count time it takes to find a solution

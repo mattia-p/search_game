@@ -68,6 +68,7 @@ void Astar::ExpandNeighbors(Node* &current_node, int map[20][25], std::vector<No
     }
 }
 
+// Optimize this
 bool Astar::NodeInClosedSet(int x, int y, std::vector<Node*> &closed_set)
 {
     for(auto node: closed_set)

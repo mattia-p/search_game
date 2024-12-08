@@ -79,51 +79,60 @@ void Game::setPath(std::vector<std::vector<int>> path_coordinates)
 void Game::handleEvents()
 {
     SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type)
-    {
-    case SDL_QUIT:
-        isRunning = false;
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            if (start_pose_acquired == false)
-            {
-                int mouseX, mouseY;
-                SDL_GetMouseState(&mouseX, &mouseY);
-                start_pose_acquired = true;
 
-                setStart(mouseX / 32, mouseY / 32);
-                // start_pose = {mouseX / 32, mouseY / 32};
-                start_pose[0] = mouseX / 32;
-                start_pose[1] = mouseY / 32;
-            }
-            else if (start_pose_acquired == true && end_pose_acquired == false)
-            {
-                int mouseX, mouseY;
-                SDL_GetMouseState(&mouseX, &mouseY);
-                
-                end_pose_acquired = true;
+    while (SDL_PollEvent(&event)){
 
-                setEnd(mouseX / 32, mouseY / 32);
+        switch (event.type){
 
-                end_pose[0] = mouseX / 32;
-                end_pose[1] = mouseY / 32;
+            case SDL_QUIT:
+                isRunning = false;
+                break;
 
-            }
-            
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT){
+                    
+                    int mouseX, mouseY;
+                    SDL_GetMouseState(&mouseX, &mouseY);
+
+                    if (!start_pose_acquired){
+                        
+                        start_pose_acquired = true;
+
+                        setStart(mouseX / 32, mouseY / 32);
+                        // start_pose = {mouseX / 32, mouseY / 32};
+                        start_pose[0] = mouseX / 32;
+                        start_pose[1] = mouseY / 32;
+                    }
+                    else if (start_pose_acquired && !end_pose_acquired)
+                    {
+                        
+                        end_pose_acquired = true;
+
+                        setEnd(mouseX / 32, mouseY / 32);
+
+                        end_pose[0] = mouseX / 32;
+                        end_pose[1] = mouseY / 32;
+
+                    }
+                    
+                }
         }
     }
+}
 
-    // Normal path search
-    if (!is_step_search)
-    {
+void Game::handleSearch()
+{
 
-        if (start_pose_acquired && end_pose_acquired && !a_star_done)
-        {
-            
+    if(!is_step_search){
+
+
+        if (start_pose_acquired && end_pose_acquired && !a_star_done){
+                
+            std::cout << "Start astar search" << std::endl;
+
             std::vector<std::vector<int>> path;
+
+            Astar* astar = nullptr;
 
             // Astar* astar;
             astar = new Astar();
@@ -133,27 +142,22 @@ void Game::handleEvents()
             setPath(path);
 
             a_star_done = true;
-
         }
-
     }
 
-    // Step by step search
-    else
-    {
-        // If the user set the start and end position and the path search isn't over yet
-        if (start_pose_acquired && end_pose_acquired && !a_star_done)
-        {
+    else{
 
-            if (step_search_initialized == false)
-            {
+        // Step by step search
+        if (start_pose_acquired && end_pose_acquired && !a_star_done){
+
+            if (step_search_initialized == false){
                 std::cout << "Initialize astar object" << std::endl;
+                
                 astar = new Astar();
                 
                 step_search_initialized = true;
             }
-            else
-            {
+            else{
                 //  Do one step of the path search
                 astar->StepSearch(map_array, start_pose, end_pose);
 
@@ -163,15 +167,17 @@ void Game::handleEvents()
             }
 
             // Check if the path search is over
-            a_star_done = astar->search_complete;
+            bool a_star_done = astar->search_complete;
 
             // If the path search if over, update the path object to plot the result
             if (a_star_done)
             {
-                std::cout << "Goal found: " << std::endl;
+                // std::cout << "Goal found: " << std::endl;
                 setPath(astar->current_path);
             }
+
         }
+
     }
 }
 

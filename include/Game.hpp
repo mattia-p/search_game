@@ -21,6 +21,7 @@ public:
     void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
     
     void handleEvents();
+    void handleSearch();
     void update();
     void render();
     void clean();
@@ -31,6 +32,7 @@ public:
     void setPath(std::vector<std::vector<int>> path_coordinates);
 
     bool running() {return isRunning;}
+    bool isRunning;
 
     static SDL_Renderer *renderer;
 
@@ -49,14 +51,14 @@ public:
     void setOpenSet(const std::vector<Node*>  &open_set_nodes);
     void setClosedSet(const std::vector<Node*> &closed_set_nodes);
 
-private:
-    int cnt = 0;
-    bool isRunning;
     int start_pose[2];
     int end_pose[2];
     bool start_pose_acquired = false;
     bool end_pose_acquired = false;
     bool a_star_done = false;
+
+private:
+    int cnt = 0;
     SDL_Window *window;
     
 };
