@@ -158,43 +158,43 @@ void Game::handleSearch()
         }
     }
 
-    // else{
+    else{
 
-    //     // Step by step search
-    //     if (start_pose_acquired && end_pose_acquired && !a_star_done){
+        // Step by step search
+        if (start_pose_acquired && end_pose_acquired && !a_star_done){
 
-    //         if (step_search_initialized == false){
-    //             std::cout << "Initialize astar object" << std::endl;
+            if (step_search_initialized == false){
+                std::cout << "Initialize astar object" << std::endl;
                 
-    //             // Initialize astar with smart pointer
-    //             astar = std::make_unique<Astar>();
+                // Initialize astar with smart pointer
+                astar = std::make_unique<Astar>();
                 
-    //             step_search_initialized = true;
-    //         }
-    //         else{
-    //             //  Do one step of the path search
-    //             astar->StepSearch(map_array, start_pose, end_pose);
+                step_search_initialized = true;
+            }
+            else{
+                //  Do one step of the path search
+                astar->StepSearch(map_array, start_pose, end_pose);
 
-    //             // Update the open set and closed set objects
-    //             setOpenSet(astar->open_set_step_search);
-    //             setClosedSet(astar->closed_set_step_search);
-    //         }
+                // Update the open set and closed set objects
+                setOpenSet(astar->open_set_step_search);
+                setClosedSet(astar->closed_set_step_search);
+            }
 
-    //         // Check if the path search is over
-    //         // TODO: ERROR? This creates a local variable a_star_done rather than modifying the class member. 
-    //         // bool a_star_done = astar->search_complete;
+            // Check if the path search is over
+            // TODO: ERROR? This creates a local variable a_star_done rather than modifying the class member. 
+            // bool a_star_done = astar->search_complete;
 
-    //         // If the path search if over, update the path object to plot the result
-    //         if (astar->search_complete)
-    //         {
-    //             // std::cout << "Goal found: " << std::endl;
-    //             setPath(astar->current_path);
-    //             a_star_done = true;
-    //         }
+            // If the path search if over, update the path object to plot the result
+            if (astar->search_complete)
+            {
+                // std::cout << "Goal found: " << std::endl;
+                setPath(astar->current_path);
+                a_star_done = true;
+            }
 
-    //     }
+        }
 
-    // }
+    }
 }
 
 void Game::setOpenSet(const std::vector<std::unique_ptr<Node>> &open_set_nodes){

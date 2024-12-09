@@ -17,8 +17,8 @@ public:
     static void sortSet(std::vector<std::unique_ptr<Node>>& set);
     static bool Compare(const std::unique_ptr<Node>& node1, const std::unique_ptr<Node>& node2);
     static bool CheckValidNode(int x, int y, int map[20][25]);
-    static void ExpandNeighbors(Node* current_node, int map[20][25], std::vector<std::unique_ptr<Node>> &open_set, std::vector<std::unique_ptr<Node>> &closed_set, int end[2]);
-    static std::vector<std::vector<int>> SearchBack(const Node& current_node);
+    static void ExpandNeighbors(std::unique_ptr<Node>& current_node, int map[20][25], std::vector<std::unique_ptr<Node>> &open_set, std::vector<std::unique_ptr<Node>> &closed_set, int end[2]);
+    static std::vector<std::vector<int>> SearchBack(std::unique_ptr<Node>& current_node);
     static Node* GetNodeFromOpenSet(int x, int y, std::vector<std::unique_ptr<Node>> &open_set);
     static bool NodeInClosedSet(int x, int y, std::vector<std::unique_ptr<Node>> &closed_set);
     
