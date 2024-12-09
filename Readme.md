@@ -21,3 +21,4 @@ xhost +
 - Make it modular and let people choose size
 - Automated documentation
 - Count time it takes to find a solution
+- Generate random maze

@@ -2,6 +2,8 @@
 #include <vector>
 #include "astar.hpp"
 
+#include <memory>
+
 Game *game = nullptr;
 
 
@@ -60,7 +62,7 @@ int main(int argc, const char * argv[])
     Uint32 frameStart;
     int frameTime;
 
-    game = new Game;
+    auto game = std::make_unique<Game>();
 
     game->init("GameEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false, false);
     game->loadMap(lvl1);
@@ -87,12 +89,6 @@ int main(int argc, const char * argv[])
     }
 
     game->clean();
-
-    // Free memory allocated to game object in the heap. But now the pointer is dangling, because it still holds the same address.
-    delete game;
-
-    // Indicate that it no longer points to any object
-    game = nullptr;
 
     return 0;
 }

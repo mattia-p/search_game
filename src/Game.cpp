@@ -6,6 +6,8 @@
 #include <memory> // for smart pointer
 #include <cstring>  // For std::memcpy
 
+#include <chrono>
+
 SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game(){
@@ -137,10 +139,18 @@ void Game::handleSearch()
             // Create local instance of astar class
             Astar astar;
 
+            auto start = std::chrono::high_resolution_clock::now();
+
             path = astar.search(map_array, start_pose, end_pose);
 
-            std::cout << "End astar search" << std::endl;
+            auto end = std::chrono::high_resolution_clock::now();
 
+            // Calculate the duration in microseconds
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+            // Output the duration in microseconds
+            std::cout << "Elapsed time: " << duration.count() << " microseconds." << std::endl;
+            
             // TODO: Make sure is returns something before we call setPath
             setPath(path);
 
@@ -148,62 +158,68 @@ void Game::handleSearch()
         }
     }
 
-    else{
+    // else{
 
-        // Step by step search
-        // if (start_pose_acquired && end_pose_acquired && !a_star_done){
+    //     // Step by step search
+    //     if (start_pose_acquired && end_pose_acquired && !a_star_done){
 
-        //     if (step_search_initialized == false){
-        //         std::cout << "Initialize astar object" << std::endl;
+    //         if (step_search_initialized == false){
+    //             std::cout << "Initialize astar object" << std::endl;
                 
-        //         astar = new Astar();
+    //             // Initialize astar with smart pointer
+    //             astar = std::make_unique<Astar>();
                 
-        //         step_search_initialized = true;
-        //     }
-        //     else{
-        //         //  Do one step of the path search
-        //         astar->StepSearch(map_array, start_pose, end_pose);
+    //             step_search_initialized = true;
+    //         }
+    //         else{
+    //             //  Do one step of the path search
+    //             astar->StepSearch(map_array, start_pose, end_pose);
 
-        //         // Update the open set and closed set objects
-        //         setOpenSet(astar->open_set_step_search);
-        //         setClosedSet(astar->closed_set_step_search);
-        //     }
+    //             // Update the open set and closed set objects
+    //             setOpenSet(astar->open_set_step_search);
+    //             setClosedSet(astar->closed_set_step_search);
+    //         }
 
-        //     // Check if the path search is over
-        //     // TODO: ERROR? This creates a local variable a_star_done rather than modifying the class member. 
-        //     bool a_star_done = astar->search_complete;
+    //         // Check if the path search is over
+    //         // TODO: ERROR? This creates a local variable a_star_done rather than modifying the class member. 
+    //         // bool a_star_done = astar->search_complete;
 
-        //     // If the path search if over, update the path object to plot the result
-        //     if (a_star_done)
-        //     {
-        //         // std::cout << "Goal found: " << std::endl;
-        //         setPath(astar->current_path);
-        //     }
+    //         // If the path search if over, update the path object to plot the result
+    //         if (astar->search_complete)
+    //         {
+    //             // std::cout << "Goal found: " << std::endl;
+    //             setPath(astar->current_path);
+    //             a_star_done = true;
+    //         }
 
-        // }
+    //     }
 
+    // }
+}
+
+void Game::setOpenSet(const std::vector<std::unique_ptr<Node>> &open_set_nodes){
+    
+    // Clear the previous content
+    open_set_step_search.clear();
+
+    for(const auto &node : open_set_nodes){
+
+        auto game_obj = std::make_unique<GameObject>("../src/assets/open.png", node->x * 32, node->y * 32);
+        // Move ownership into the vector
+        open_set_step_search.push_back(std::move(game_obj));
     }
 }
 
-void Game::setOpenSet(const std::vector<Node*> &open_set_nodes)
-{
-    open_set_step_search = {};
-    for(const auto &node : open_set_nodes)
-    {
-        GameObject* game_obj;
-        game_obj = new GameObject("../src/assets/open.png", node->x * 32, node->y * 32);
-        open_set_step_search.push_back(game_obj);
-    }
-}
+void Game::setClosedSet(const std::vector<std::unique_ptr<Node>>  &closed_set_nodes){
+    
+    // Clear the previous content
+    closed_set_step_search.clear();
 
-void Game::setClosedSet(const std::vector<Node*>  &closed_set_nodes)
-{
-    closed_set_step_search = {};
-    for(const auto &node : closed_set_nodes)
-    {
-        GameObject* game_obj;
-        game_obj = new GameObject("../src/assets/closed.png", node->x * 32, node->y * 32);
-        closed_set_step_search.push_back(game_obj);
+    for(const auto &node : closed_set_nodes){
+
+        auto game_obj = std::make_unique<GameObject>("../src/assets/closed.png", node->x * 32, node->y * 32);
+        // Move ownership into the vector
+        closed_set_step_search.push_back(std::move(game_obj));
     }
 }
 
@@ -212,12 +228,12 @@ void Game::update()
 
     if (is_step_search)
     {
-        for (auto gameobj : closed_set_step_search)
+        for (auto& gameobj : closed_set_step_search)
         {
             gameobj->Update();
         }
 
-        for (auto gameobj : open_set_step_search)
+        for (auto& gameobj : open_set_step_search)
         {
             gameobj->Update();
         }
@@ -242,12 +258,12 @@ void Game::render()
     
     if (is_step_search)
     {
-        for(auto gameobj : closed_set_step_search)
+        for(auto& gameobj : closed_set_step_search)
         {
             gameobj->Render(renderer);
         }
 
-        for(auto gameobj : open_set_step_search)
+        for(auto& gameobj : open_set_step_search)
         {
             gameobj->Render(renderer);
         }

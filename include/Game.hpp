@@ -37,10 +37,12 @@ public:
     // Step search
     bool is_step_search = false;
     bool step_search_initialized = false;
-    std::vector<GameObject*> open_set_step_search;
-    std::vector<GameObject*> closed_set_step_search;
-    void setOpenSet(const std::vector<Node*>  &open_set_nodes);
-    void setClosedSet(const std::vector<Node*> &closed_set_nodes);
+
+    std::vector<std::unique_ptr<GameObject>> open_set_step_search;
+    std::vector<std::unique_ptr<GameObject>> closed_set_step_search;
+
+    void setOpenSet(const std::vector<std::unique_ptr<Node>>  &open_set_nodes);
+    void setClosedSet(const std::vector<std::unique_ptr<Node>> &closed_set_nodes);
 
     int start_pose[2];
     int end_pose[2];
@@ -62,6 +64,8 @@ private:
     int map_array[20][25];
 
     std::vector<std::unique_ptr<GameObject>> GameObjects;
+
+    std::unique_ptr<Astar> astar;
     
 };
 
