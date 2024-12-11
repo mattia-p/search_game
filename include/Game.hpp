@@ -10,6 +10,7 @@
 #include <vector>
 #include "astar.hpp"
 #include "Node.hpp"
+#include "Button.hpp"
 
 #include <memory> // For smart pointers 
 
@@ -66,6 +67,10 @@ private:
     std::vector<std::unique_ptr<GameObject>> GameObjects;
 
     std::unique_ptr<Astar> astar;
+
+    void renderSidebar();
+
+    std::vector<Button> buttons;
     
 };
 

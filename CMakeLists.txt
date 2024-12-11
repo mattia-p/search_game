@@ -40,6 +40,7 @@ add_library(game_library
   src/Map.cpp
   src/astar.cpp
   src/Node.cpp
+  src/Button.cpp
 )
 
 # Specify include directories for the library target

@@ -6,6 +6,8 @@
 #include <memory> // for smart pointer
 #include <cstring>  // For std::memcpy
 
+#include "Button.hpp"
+
 #include <chrono>
 
 SDL_Renderer* Game::renderer = nullptr;
@@ -44,6 +46,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     else{
         isRunning = false;
     }
+
+    // Sidebar dimensions
+    const int SIDEBAR_WIDTH = 200;
+    int buttonHeight = 50;
+    int buttonSpacing = 10;
+    int buttonX = width - SIDEBAR_WIDTH + 10;
+    int buttonY = 10;
+
+    // Add buttons to the sidebar
+    buttons.push_back(Button("Start Search", {buttonX, buttonY, SIDEBAR_WIDTH - 20, buttonHeight},
+                             {0, 128, 255, 255}, {0, 100, 200, 255}));
+    buttons.push_back(Button("Reset", {buttonX, buttonY + buttonHeight + buttonSpacing, SIDEBAR_WIDTH - 20, buttonHeight},
+                             {255, 0, 0, 255}, {200, 0, 0, 255}));
 
     is_step_search = is_step_search_in;
 
@@ -274,8 +289,28 @@ void Game::render()
         gameobj->Render(renderer);
     }
 
-    
+    renderSidebar();
+
     SDL_RenderPresent(renderer);
+
+}
+
+
+void Game::renderSidebar(){
+
+    // Create side bar
+    const int SIDEBAR_WIDTH = 200;
+    
+    const SDL_Rect sidebar = {SDL_GetWindowSurface(window)->w - SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, SDL_GetWindowSurface(window)->h};
+
+    SDL_SetRenderDrawColor(renderer, 146, 104, 41, 1);
+
+    SDL_RenderFillRect(renderer, &sidebar);
+
+    // Render buttons
+    for (auto& button : buttons) {
+        button.render(renderer);
+    }
 
 }
 

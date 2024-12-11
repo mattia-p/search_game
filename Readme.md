@@ -22,3 +22,4 @@ xhost +
 - Automated documentation
 - Count time it takes to find a solution
 - Generate random maze
+- Explore why some areas seem to be in open set in the middle of areas in closed set at the end
