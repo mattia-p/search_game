@@ -1,24 +1,53 @@
-export XDG_RUNTIME_DIR=/app
-export RUNLEVEL=3
+# Search game engine
 
-From local:
+![Alt text](assets/search1.gif)
+
+## Usage
+
+Build docker image
+```bash
+docker compose build
+```
+
+Enter docker container
+```bash
+docker exec -it search_game-cpp-dev-1 /bin/bash
+```
+
+### Build
+
+```bash
+cd app/
+mkdir build
+cd build/
+cmake ..
+make
+```
+
+### Run
+```bash
+docker exec -it search_game-cpp-dev-1 /bin/bash
+cd app/
+cd build/
+./game
+```
+Select a start position and goal on the map.
+
+## Before running
+
+From localhost:
+```bash
 xhost +
+```
 
-## Ideas
+## Ideas for later
 
-- Add tests
-- Plots explored nodes on map
 - Show path being explored live
 - Make this run online?
-- Solve xhost + problem
-- Add some automated formatting
-- CI? Automated build check and tests check?
+- Automatic xhost + 
+- Automated formatting
 - Make user put the obstacles
-- Print some text
 - Reset button
-- Account for solution not found
 - Make game bigger with more tiles
 - Make it modular and let people choose size
-- Automated documentation
-- Count time it takes to find a solution
 - Generate random maze

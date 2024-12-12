@@ -13,5 +13,5 @@ Node::~Node(){}
 
 float Node::heurestic(int x1, int y1, int x2, int y2)
 {
-    return abs(x2 - x1) + abs(y2 - y1);
+    return abs(x2 - x1) * 2 + abs(y2 - y1) * 2;
 }
