@@ -7,6 +7,10 @@
   <img src="assets/search1.gif" alt="Alt text 1" width="45%" />
   <img src="assets/search2.gif" alt="Alt text 2" width="45%" />
 </div>
+<div align="center">
+  <img src="assets/search3.gif" alt="Alt text 1" width="45%" />
+  <img src="assets/search4.gif" alt="Alt text 2" width="45%" />
+</div>
 
 ## Usage
 
