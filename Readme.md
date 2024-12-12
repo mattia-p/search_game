@@ -1,6 +1,12 @@
 # Search game engine
 
-![Alt text](assets/search1.gif)
+<!-- ![Alt text](assets/search1.gif)
+![Alt text](assets/search2.gif) -->
+
+<div align="center">
+  <img src="assets/search1.gif" alt="Alt text 1" width="45%" />
+  <img src="assets/search2.gif" alt="Alt text 2" width="45%" />
+</div>
 
 ## Usage
 
