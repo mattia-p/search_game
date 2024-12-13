@@ -19,6 +19,11 @@ Build docker image
 docker compose build
 ```
 
+Start docker container
+```bash
+docker compose up -d
+```
+
 Enter docker container
 ```bash
 docker exec -it search_game-cpp-dev-1 /bin/bash
@@ -35,13 +40,13 @@ make
 ```
 
 ### Run
+
+Once build ready:
 ```bash
-docker exec -it search_game-cpp-dev-1 /bin/bash
-cd app/
 cd build/
 ./game
 ```
-Select a start position and goal on the map.
+Select a start and goal position on the map.
 
 ## Before running
 
